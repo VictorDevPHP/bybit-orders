@@ -35,13 +35,15 @@ jobs:
     if: success()
     runs-on: ubuntu-latest
     steps:
+      - name: Configurar GitHub CLI
+        run: |
+          curl -sSL https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.deb -o gh.deb
+          sudo dpkg -i gh.deb
+          gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
+
       - name: Mesclar branch automaticamente na main
-        uses: devmasx/merge-branch-action@main
-        with:
-          type: now
-          from_branch: ${{ github.ref_name }}
-          target_branch: main
-          github_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh pr merge ${{ github.head_ref }} --merge --admin
 
   deploy:
     needs: merge
