@@ -1,8 +1,8 @@
 name: CI/CD Laravel
 
 on:
-  push:
-    branches-ignore:
+  pull_request:
+    branches:
       - main
 
 jobs:
@@ -39,6 +39,7 @@ jobs:
         run: |
           curl -sSL https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.deb -o gh.deb
           sudo dpkg -i gh.deb
+          sudo apt-get install -f
           gh auth login --with-token < ${{ secrets.GITHUB_TOKEN }}
 
       - name: Mesclar branch automaticamente na main
@@ -60,4 +61,7 @@ jobs:
             git pull origin main
             composer install --no-interaction --prefer-dist --optimize-autoloader
             php artisan migrate --force
-            php
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+            php artisan queue:restart
