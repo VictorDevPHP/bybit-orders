@@ -1,10 +1,10 @@
 name: CI/CD Laravel
 
-
 on:
   push:
     branches-ignore:
       - main
+
 jobs:
   test:
     runs-on: ubuntu-latest
@@ -47,7 +47,8 @@ jobs:
 
       - name: Mesclar branch automaticamente na main
         run: |
-          gh pr merge ${{ github.head_ref }} --merge --admin
+          gh pr merge ${{ github.head_ref }} --merge --admin --base main
+
 
   # deploy:
   #   needs: merge
