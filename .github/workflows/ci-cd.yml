@@ -1,0 +1,64 @@
+name: CI/CD Laravel
+
+on:
+  push:
+    branches-ignore:
+      - main
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout do código
+        uses: actions/checkout@v3
+
+      - name: Configurar PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.2'
+          extensions: mbstring, pdo, pdo_mysql, bcmath
+
+      - name: Instalar dependências
+        run: composer install --no-interaction --prefer-dist --optimize-autoloader
+
+      - name: Criar arquivo .env
+        run: cp .env.example .env
+
+      - name: Gerar chave da aplicação
+        run: php artisan key:generate
+
+      - name: Rodar testes
+        run: php artisan test
+
+  merge:
+    needs: test
+    if: success()
+    runs-on: ubuntu-latest
+    steps:
+      - name: Mesclar branch automaticamente na main
+        uses: devmasx/merge-branch-action@main
+        with:
+          type: now
+          from_branch: ${{ github.ref_name }}
+          target_branch: main
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy:
+    needs: merge
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy no servidor
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            cd /var/www/app.leadfy.me/html
+            git pull origin main
+            composer install --no-interaction --prefer-dist --optimize-autoloader
+            php artisan migrate --force
+            php artisan config:clear
+            php artisan route:clear
+            php artisan view:clear
+            php artisan queue:restart
