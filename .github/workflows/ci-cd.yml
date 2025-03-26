@@ -43,7 +43,7 @@ jobs:
           curl -sSL https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.deb -o gh.deb
           sudo dpkg -i gh.deb
           sudo apt-get install -f
-          echo "${{ secrets.TOKEN }}" | gh auth login --with-token
+          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
       - name: Publicar branch no repositório
         run: |
