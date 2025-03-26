@@ -43,14 +43,20 @@ jobs:
           curl -sSL https://github.com/cli/cli/releases/download/v2.0.0/gh_2.0.0_linux_amd64.deb -o gh.deb
           sudo dpkg -i gh.deb
           sudo apt-get install -f
-          echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
+          echo "${{ secrets.TOKEN }}" | gh auth login --with-token
+
+      - name: Publicar branch no repositório
+        run: |
+          git push origin "${{ github.ref_name }}"
 
       - name: Criar Pull Request para a main
         run: |
-          gh pr create --base main --head ${{ github.head_ref }} --title "Merge automático de ${{ github.head_ref }}" --body "Este PR foi gerado automaticamente pelo workflow."
+          gh pr create --base main --head "${{ github.ref_name }}" --title "Merge automático de ${{ github.ref_name }}" --body "Este PR foi gerado automaticamente pelo workflow."
+
       - name: Mesclar branch automaticamente na main
         run: |
-          gh pr merge ${{ github.head_ref }} --merge --admin
+          gh pr merge "${{ github.ref_name }}" --merge --admin
+
 
   # deploy:
   #   needs: merge
