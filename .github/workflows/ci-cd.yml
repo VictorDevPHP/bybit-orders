@@ -45,10 +45,12 @@ jobs:
           sudo apt-get install -f
           echo "${{ secrets.GITHUB_TOKEN }}" | gh auth login --with-token
 
+      - name: Criar Pull Request para a main
+        run: |
+          gh pr create --base main --head ${{ github.head_ref }} --title "Merge automático de ${{ github.head_ref }}" --body "Este PR foi gerado automaticamente pelo workflow."
       - name: Mesclar branch automaticamente na main
         run: |
-          gh pr merge ${{ github.head_ref }} --merge --admin --base main
-
+          gh pr merge ${{ github.head_ref }} --merge --admin
 
   # deploy:
   #   needs: merge
