@@ -68,4 +68,11 @@ class OrdersController extends Controller
 
         return hash_hmac('sha256', $queryString, $this->apiSecret);
     }
+
+    public function buildQueryString(array $payload): string
+    {
+        ksort($payload);
+        return http_build_query($payload, '', '&', PHP_QUERY_RFC3986);
+    }
+
 }
