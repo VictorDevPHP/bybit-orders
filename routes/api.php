@@ -6,4 +6,4 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/listenTradingView', [WebhookController::class, 'listenTrandingViewEvents']);
 
-Route::get('/getWalletBalance', [OrdersController::class, 'getWalletBalance']); 
+Route::get('/getWalletBalance', [OrdersController::class, 'getWalletBalance']);
