@@ -9,9 +9,9 @@ class OrdersController extends Controller
 {
     protected $client;
 
-    protected $apiKey;
+    public $apiKey;
 
-    protected $apiSecret;
+    public $apiSecret;
 
     protected $baseUrl;
 
@@ -61,12 +61,18 @@ class OrdersController extends Controller
         return $data['result'] ?? [];
     }
 
-    private function signRequest(array $payload): string
-    {
+    protected function signRequest(array $payload): string    {
         ksort($payload);
         $payload['api_key'] = $this->apiKey;
         $queryString = http_build_query($payload);
 
         return hash_hmac('sha256', $queryString, $this->apiSecret);
     }
+
+    public function buildQueryString(array $payload): string
+    {
+        ksort($payload);
+        return http_build_query($payload, '', '&', PHP_QUERY_RFC3986);
+    }
+
 }
