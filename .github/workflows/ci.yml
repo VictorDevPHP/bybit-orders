@@ -43,7 +43,7 @@ jobs:
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
-          php-version: '8.1' # Alinha com o seu projeto
+          php-version: '8.2' # Alinha com o seu projeto
           extensions: mbstring, bcmath, mysql
           coverage: none
 
