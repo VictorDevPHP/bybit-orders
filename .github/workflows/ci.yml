@@ -58,4 +58,7 @@ jobs:
         run: php artisan migrate --force
 
       - name: Run tests
-        run: php artisan test
+        run: composer test:unit
+
+      - name: Lint
+        run: composer lint
