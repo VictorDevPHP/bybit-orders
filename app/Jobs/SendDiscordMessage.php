@@ -16,6 +16,7 @@ class SendDiscordMessage implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $channelId;
+
     protected $message;
 
     /**
@@ -35,23 +36,23 @@ class SendDiscordMessage implements ShouldQueue
         if (str_contains($this->message, 'Ação: Buy')) {
             $this->channelId = env('CANAL_ID_BUY');
             Log::info($this->channelId);
-        } else if (str_contains($this->message, 'Ação: Sell')) {
+        } elseif (str_contains($this->message, 'Ação: Sell')) {
             $this->channelId = env('CANAL_ID_SELL');
             Log::info($this->channelId);
         } else {
             $this->channelId = 'Não encontrado';
             Log::info($this->channelId);
-        }        
-        
+        }
+
         $discord->on('init', function (Discord $discord) {
             $channel = $discord->getChannel($this->channelId);
-            if ($channel) {   
+            if ($channel) {
                 $channel->sendMessage($this->message)->then(
                     function (Message $message) use ($discord) {
                         $discord->close();
                     },
                     function (\Exception $e) use ($discord) {
-                        Log::error("Erro ao enviar mensagem: " . $e->getMessage());
+                        Log::error('Erro ao enviar mensagem: '.$e->getMessage());
                         $discord->close();
                     }
                 );
@@ -65,8 +66,6 @@ class SendDiscordMessage implements ShouldQueue
 
     /**
      * Formata a mensagem para leitura humana no Discord.
-     *
-     * @return string
      */
     public function formatMessageForDiscord($message): string
     {
@@ -78,7 +77,7 @@ class SendDiscordMessage implements ShouldQueue
             $formattedTicker,
             $message['order']['new_position_size']
         );
+
         return $formattedMessage;
     }
-
 }

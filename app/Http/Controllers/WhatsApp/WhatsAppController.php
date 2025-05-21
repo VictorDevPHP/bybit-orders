@@ -3,7 +3,6 @@
 namespace App\Http\Controllers\WhatsApp;
 
 use GuzzleHttp\Client;
-use Illuminate\Http\Request;
 
 class WhatsAppController
 {
@@ -14,13 +13,13 @@ class WhatsAppController
      */
     public function sendMessage($phone, $texto)
     {
-        $client = new Client();
+        $client = new Client;
         try {
             $response = $client->post('http://localhost:3000/wppconnect/sendMessage', [
                 'json' => [
                     'phone' => $phone,
                     'text' => $texto,
-                ]
+                ],
             ]);
 
             return response()->json([
