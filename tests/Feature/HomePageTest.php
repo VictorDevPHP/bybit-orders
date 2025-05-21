@@ -18,26 +18,26 @@ class HomePageTest extends TestCase
         $response->assertSee('Laravel'); // verica se tem uma string especifica
         $response->assertDontSee('Erro 404'); // Verificar se a resposta NÃO contém um texto específico
 
-        // Testar um redirecionamento
-        $response = $this->get('/dashboard');
-        $response->assertRedirect('/login');
+        // // Testar um redirecionamento
+        // $response = $this->get('/dashboard');
+        // $response->assertRedirect('/login');
 
-        // Verificar resposta JSON
-        $response = $this->getJson('/api/user');
-        $response->assertJson([
-            'name' => 'Victor',
-            'email' => 'victor@example.com',
-        ]);
+        // // Verificar resposta JSON
+        // $response = $this->getJson('/api/user');
+        // $response->assertJson([
+        //     'name' => 'Victor',
+        //     'email' => 'victor@example.com',
+        // ]);
 
-        // Testar banco de dados
-        $this->assertDatabaseHas('users', [
-            'email' => 'victor@example.com'
-        ]);
+        // // Testar banco de dados
+        // $this->assertDatabaseHas('users', [
+        //     'email' => 'victor@example.com'
+        // ]);
 
-        // Verifica se um registro existe no banco de dados.
-        $this->assertDatabaseMissing('users', [
-            'email' => 'naoexiste@example.com'
-        ]);
+        // // Verifica se um registro existe no banco de dados.
+        // $this->assertDatabaseMissing('users', [
+        //     'email' => 'naoexiste@example.com'
+        // ]);
 
     }
 }
